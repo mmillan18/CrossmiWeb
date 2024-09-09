@@ -26,7 +26,7 @@
             @click="selectedItem = item"
             class="navbar-item"
           >
-            {{ item }}
+            {{ item.title }}
           </v-btn>
         </v-row>
       </v-col>
@@ -70,26 +70,22 @@
         </v-menu>
 
         <!-- Icono de hamburguesa (solo en pantallas móviles) -->
-        <v-app-bar-nav-icon v-if="!isDesktop" @click="drawer = !drawer" />
+        <v-app-bar-nav-icon v-if="!isDesktop" @click.stop="drawer = !drawer" />
       </v-col>
     </v-row>
 
     <!-- Drawer para pantallas móviles -->
-    <v-navigation-drawer v-model="drawer" app right temporary>
-      <v-list dense>
-        <v-list-item
-          v-for="(item, i) in navbarItems"
-          :key="i"
-          @click="drawer = false; selectedItem = item"
-        >
-          <v-list-item-title>{{ item }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+
   </v-app-bar>
+  <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'right' : undefined" temporary>
+    <v-list :items="navbarItems">
+
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
+import { watch } from 'vue';
 import { useDisplay } from 'vuetify'
 
 export default {
@@ -103,13 +99,35 @@ export default {
   data() {
     return {
       selectedItem: '', // Guardar el ítem seleccionado
-      navbarItems: ['Inicio', 'Sobre Nosotros', 'Orígenes', 'Productos'], // Opciones del navbar
-      selectedLanguage: 'es',  // Idioma por defecto español
+      navbarItems: [
+        {
+          title: 'Inicio',
+
+        },
+        {
+          title:'Sobre Nosotros',
+        },
+        {
+          title:'Orígenes',
+        },
+        {
+          title:'Productos',
+        },
+      ], // Opciones del navbar
       drawer: false, // Controla la apertura del menú hamburguesa en móviles
+      group: null,
+      selectedLanguage: 'es',  // Idioma por defecto español
+
+      //drawer: false, // Controla la apertura del menú hamburguesa en móviles
       languages: [
         { text: 'Español', value: 'es', flag: 'src/assets/flags/es-min.png' },
         { text: 'Inglés', value: 'en', flag: 'src/assets/flags/en-min.png' }
       ]
+    }
+  },
+  watch:{
+    group(){
+      this.drawer = false
     }
   },
   computed: {
