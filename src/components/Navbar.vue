@@ -3,6 +3,7 @@
     color="primary"
     elevate-on-scroll
     flat
+    fixed  
     class="navbar"
   >
     <v-row class="d-flex justify-space-between align-center">
@@ -73,19 +74,58 @@
         <v-app-bar-nav-icon v-if="!isDesktop" @click.stop="drawer = !drawer" />
       </v-col>
     </v-row>
-
-    <!-- Drawer para pantallas móviles -->
-
   </v-app-bar>
-  <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'right' : undefined" temporary>
-    <v-list :items="navbarItems">
 
+  <!-- Drawer para pantallas móviles -->
+  <v-navigation-drawer v-model="drawer" location="right" temporary class="drawer-background" width="280" >
+    <v-list>
+      <v-list-item
+        v-for="(item, i) in navbarItems"
+        :key="i"
+        @click="drawer = false; selectedItem = item"
+        class="menu-item-drawer"
+      >
+        <v-list-item-title class="drawer-text">{{ item.title }}</v-list-item-title>
+      </v-list-item>
     </v-list>
+
+    <!-- Footer fijo con contacto, íconos y copyright -->
+    <template v-slot:append>
+      <v-divider></v-divider>
+      <v-container class="footer-drawer">
+        <div class="contact-info">
+          <p>Contactanos: <br>
+            <v-icon class="mr-2" icon="mdi-email">mdi-email</v-icon>
+            <a href="mailto:Comercial@frutosevergreen.com" class="link">Comercial@frutosevergreen.com</a>
+            <br>
+            <v-icon class="mr-2">mdi-phone</v-icon>
+            <a href="tel:+573156299567" class="link">+57 3156299567</a>
+          </p>
+
+          <!-- Redes sociales -->
+          <div class="social-media ma-3">
+            <v-btn class="miboton" icon href="https://www.instagram.com/frutos_evergreen?igsh=bDMyYmltN3c4OHlr&utm_source=qr" target="_blank" flat color="transparent">
+              <v-icon>mdi-instagram</v-icon>
+            </v-btn>
+            <v-btn class="miboton" icon href="https://wa.me/573156299567" target="_blank" flat color="transparent">
+              <v-icon>mdi-whatsapp</v-icon>
+            </v-btn>
+            <v-btn class="miboton" icon href="https://www.linkedin.com/in/frutos-evergreen/" target="_blank" flat color="transparent">
+              <v-icon>mdi-linkedin</v-icon>
+            </v-btn>
+          </div>
+        </div>
+
+        <v-divider></v-divider>
+        <div class="copyright ma-3">
+          <p>© 2024 Frutos Evergreen</p>
+        </div>
+      </v-container>
+    </template>
   </v-navigation-drawer>
 </template>
 
 <script>
-import { watch } from 'vue';
 import { useDisplay } from 'vuetify'
 
 export default {
@@ -102,32 +142,23 @@ export default {
       navbarItems: [
         {
           title: 'Inicio',
-
         },
         {
-          title:'Sobre Nosotros',
+          title: 'Sobre Nosotros',
         },
         {
-          title:'Orígenes',
+          title: 'Orígenes',
         },
         {
-          title:'Productos',
+          title: 'Productos',
         },
       ], // Opciones del navbar
       drawer: false, // Controla la apertura del menú hamburguesa en móviles
-      group: null,
       selectedLanguage: 'es',  // Idioma por defecto español
-
-      //drawer: false, // Controla la apertura del menú hamburguesa en móviles
       languages: [
         { text: 'Español', value: 'es', flag: 'src/assets/flags/es-min.png' },
         { text: 'Inglés', value: 'en', flag: 'src/assets/flags/en-min.png' }
       ]
-    }
-  },
-  watch:{
-    group(){
-      this.drawer = false
     }
   },
   computed: {
@@ -154,6 +185,8 @@ export default {
 .navbar {
   background-color: #faf5e2;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10; /* Asegura que el navbar esté siempre por encima */
+  position: fixed!important;
 }
 
 .v-btn {
@@ -179,13 +212,67 @@ export default {
 
 /* Ajustes del logo para que se vea bien en pantallas móviles y grandes */
 .logo {
-  max-width: 150px; /* Máximo tamaño en pantallas grandes */
-  min-width: 100px; /* Mínimo tamaño en pantallas pequeñas */
+  max-width: 150px;
+  min-width: 100px;
 }
 
-/* Efecto hover en las opciones del navbar */
-.navbar-item:hover {
+/* Efecto hover en las opciones del navbar y drawer */
+.navbar-item:hover .v-btn,
+.menu-item-drawer:hover .drawer-text {
+  color: #f77a3b !important;
+}
+
+.miboton:hover {
+  color: #f77a3b !important;
+}
+
+/* Drawer estilos para mobile */
+.drawer-background {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #faf5e2;
+  height: 100%;
+  
+}
+
+.menu-item-drawer {
+  color: #663f3f;
+  padding: 15px;
+  font-size: 18px;
+}
+
+.drawer-text {
+  color: #663f3f;
+}
+
+/* Footer fijo dentro del Drawer */
+.footer-drawer {
+  text-align: center;
+  color: #663f3f;
+  font-size: 14px;
+  margin-top: auto;
+  padding: 15px;
+}
+
+.contact-info, .copyright {
+  margin-bottom: 20px;
+}
+
+.social-media {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.link {
+  color: #663f3f;
+  text-decoration: none;
+}
+
+.link:hover {
   color: #f77a3b;
+  text-decoration: underline;
 }
 
 /* Selector de idioma */
@@ -243,5 +330,11 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.v-navigation-drawer{
+  width: 200px;
+  height: 100%;
+  /*position: fixed!important;*/
 }
 </style>
