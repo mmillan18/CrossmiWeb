@@ -18,10 +18,10 @@
     <!-- Carrusel de productos -->
     <v-row justify="center">
       <v-col cols="12" md="8">
-        <v-carousel  hide-delimiter-background height="360" v-model="model" class="carrusel" cycle :show-arrows="false">
+        <v-carousel  hide-delimiter-background="false" :show-arrows="false" v-model="model" height="340" cycle>
           <v-carousel-item v-for="(product, index) in products" :key="index">
             <v-card class="mx-auto card-with-shadow" outlined>
-              <v-img :src="product.image" class="product-image" ></v-img>
+              <v-img :src="product.image" class="white--text" height="280"></v-img>
               <v-card-title>{{ product.title }}</v-card-title>
               <v-card-subtitle>{{ product.description }}</v-card-subtitle>
             </v-card>
@@ -50,41 +50,23 @@ export default {
       products: [
         {
           image: new URL('@/assets/coffee1-min.png', import.meta.url).href,
+         
         },
         {
           image: new URL('@/assets/coffee2-min.png', import.meta.url).href,
+          
         },
         {
           image: new URL('@/assets/coffee3-min.png', import.meta.url).href,
+         
         }
-      ],
-      // Valores responsivos para el carrusel
-      carouselHeight: '140px',
-      carouselImageHeight: '180px'
+      ]
     };
-  },
-  mounted() {
-    this.adjustCarouselHeight();
-    window.addEventListener('resize', this.adjustCarouselHeight);
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.adjustCarouselHeight);
   },
   methods: {
     redirectToWhatsapp(productName) {
       const url = `https://wa.me/573156299567?text=Hola,%20estoy%20interesado%20en%20el%20producto%20${encodeURIComponent(productName)}%20y%20me%20gustaría%20cotizarlo.`;
       window.open(url, '_blank');
-    },
-    adjustCarouselHeight() {
-      if (window.innerWidth < 768) {
-        // Cambiamos la altura del carrusel e imágenes en móviles
-        
-        this.carouselImageHeight = '200px';
-      } else {
-        // En pantallas grandes mantenemos los tamaños originales
-        this.carouselHeight = '340px';
-        this.carouselImageHeight = '280px';
-      }
     }
   }
 };
@@ -146,20 +128,14 @@ export default {
   background-color: #f7d26a;
   color: #3d3d3d;
   font-size: 16px;
-  margin-top: 5px;
+  margin-top: 20px;
 }
 
 /* Estilo con sombra para las tarjetas */
 .card-with-shadow {
-  border-radius: 12px;
+  border-radius: 12px; /* Bordes redondeados */
   padding: 15px;
   background-color: #fff;
-}
-
-/* Imágenes en carrusel */
-.product-image {
-  width: 100%;
-  object-fit: contain; /* Para que la imagen mantenga sus proporciones dentro del contenedor */
 }
 
 /* Responsividad */
@@ -175,23 +151,5 @@ export default {
   .subtitle {
     font-size: 1rem;
   }
-
-  /* Ajustes para el carrusel y sus imágenes */
-  .carrusel
-  {
-    height: 260px!important;
-  }
-  .product-image
-  {
-    max-height: 200px;
-  }
-  .home-products-container {
-    padding: 5px;
-  }
-
-  .v-carousel-item {
-    padding: 5px;
-  }
 }
-
 </style>
