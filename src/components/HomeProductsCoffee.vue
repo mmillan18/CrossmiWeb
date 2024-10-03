@@ -18,10 +18,10 @@
     <!-- Carrusel de productos -->
     <v-row justify="center">
       <v-col cols="12" md="8">
-        <v-carousel  hide-delimiter-background="false" :show-arrows="false" v-model="model" height="340" cycle>
+        <v-carousel  class="coffee-carrousel" hide-delimiter-background="false" :show-arrows="false" v-model="model">
           <v-carousel-item v-for="(product, index) in products" :key="index">
             <v-card class="mx-auto card-with-shadow" outlined>
-              <v-img :src="product.image" class="white--text" height="280"></v-img>
+              <v-img :src="product.image" class="white--text coffee-carrousel-img"></v-img>
               <v-card-title>{{ product.title }}</v-card-title>
               <v-card-subtitle>{{ product.description }}</v-card-subtitle>
             </v-card>
@@ -50,15 +50,15 @@ export default {
       products: [
         {
           image: new URL('@/assets/coffee1-min.png', import.meta.url).href,
-         
+
         },
         {
           image: new URL('@/assets/coffee2-min.png', import.meta.url).href,
-          
+
         },
         {
           image: new URL('@/assets/coffee3-min.png', import.meta.url).href,
-         
+
         }
       ]
     };
@@ -138,6 +138,13 @@ export default {
   background-color: #fff;
 }
 
+.coffee-carrousel{
+  height: 150px!important;
+}
+.coffee-carrousel-img{
+  height: 100px !important;
+}
+
 /* Responsividad */
 @media (max-width: 768px) {
   .corner-img {
@@ -150,6 +157,14 @@ export default {
 
   .subtitle {
     font-size: 1rem;
+  }
+}
+@media(min-width:400px){
+  .coffee-carrousel{
+    height: 330px!important;
+  }
+  .coffee-carrousel-img{
+    height: 280px !important;
   }
 }
 </style>
