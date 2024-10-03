@@ -335,6 +335,6 @@ export default {
 .v-navigation-drawer{
   width: 200px;
   height: 100%;
-  /*position: fixed!important;*/
+  position: fixed!important;
 }
 </style>

@@ -44,15 +44,15 @@ export default {
       model: 0, // Para controlar el carrusel
       products: [
         {
-          image: new URL('@/assets/coffee1-min.png', import.meta.url).href,
+          image: new URL('@/assets/Cocoa1-min.png', import.meta.url).href,
          
         },
         {
-          image: new URL('@/assets/coffee2-min.png', import.meta.url).href,
+          image: new URL('@/assets/cocoa2-min.png', import.meta.url).href,
           
         },
         {
-          image: new URL('@/assets/coffee3-min.png', import.meta.url).href,
+          image: new URL('@/assets/cocoa3-min.png', import.meta.url).href,
          
         }
       ]
@@ -83,8 +83,8 @@ export default {
   border-radius: 5px;
   margin-top: 20px;
   margin-bottom: 30px;
-  margin-left: 0;
-  margin-right: auto;
+  margin-left: auto;
+  margin-right: 0;
 }
 
 /* Imágenes de las esquinas */
@@ -123,7 +123,7 @@ export default {
   background-color: #f7d26a;
   color: #3d3d3d;
   font-size: 16px;
-  margin-top: 20px;
+  margin-top: 5px;
 }
 
 /* Estilo con sombra para las tarjetas */
