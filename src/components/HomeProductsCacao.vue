@@ -3,7 +3,6 @@
     <!-- Línea divisora amarilla -->
     <div class="divider"></div>
 
-
     <!-- Texto centrado -->
     <v-row class="text-center justify-center">
       <v-col cols="12">
@@ -12,13 +11,16 @@
       </v-col>
     </v-row>
 
+    <!-- Imagen de "Coming Soon" sobrepuesta en la esquina superior derecha -->
+    <v-img :src="comingSoonImage" class="coming-soon-overlay" />
+
     <!-- Carrusel de productos -->
     <v-row justify="center">
       <v-col cols="12" md="8">
-        <v-carousel hide-delimiters v-model="model" height="340" cycle>
+        <v-carousel class="coffee-carrousel" hide-delimiter-background="false" :show-arrows="false" v-model="model" cycle>
           <v-carousel-item v-for="(product, index) in products" :key="index">
             <v-card class="mx-auto card-with-shadow" outlined>
-              <v-img :src="product.image" class="white--text" height="280"></v-img>
+              <v-img :src="product.image" class="white--text coffee-carrousel-img"></v-img>
               <v-card-title>{{ product.title }}</v-card-title>
               <v-card-subtitle>{{ product.description }}</v-card-subtitle>
             </v-card>
@@ -27,10 +29,14 @@
       </v-col>
     </v-row>
 
+    <!-- Imágenes en las esquinas (inferior izquierda y derecha) -->
+    <v-img :src="leftImage" alt="Cacao en la esquina izquierda" class="corner-img left" />
+    <v-img :src="rightImage" alt="Cacao en la esquina derecha" class="corner-img right" />
+
     <!-- Botón Cotizar Ahora -->
     <v-row justify="center">
       <v-col cols="12" class="text-center mt-4">
-        <v-btn color="#f7d26a" @click="redirectToWhatsapp(product.title)">Cotizar Ahora</v-btn>
+        <v-btn color="#f7d26a" @click="redirectToWhatsapp(products[model].whatsappName)">Cotizar Ahora</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -38,22 +44,25 @@
 
 <script>
 export default {
-  name: 'HomeProducts',
+  name: 'HomeProductsCacao',
   data() {
     return {
-      model: 0, // Para controlar el carrusel
+      model: 0, // Control del carrusel
+      leftImage: new URL('@/assets/esq4-min.png', import.meta.url).href,
+      rightImage: new URL('@/assets/esq3-min.png', import.meta.url).href,
+      comingSoonImage: new URL('@/assets/coming-soon-min.png', import.meta.url).href, // Imagen "Coming Soon"
       products: [
         {
           image: new URL('@/assets/Cocoa1-min.png', import.meta.url).href,
-         
+          whatsappName: "Premium dry Cocoa Beans",
         },
         {
           image: new URL('@/assets/cocoa2-min.png', import.meta.url).href,
-          
+          whatsappName: "Cocoa liquor and powder",
         },
         {
           image: new URL('@/assets/cocoa3-min.png', import.meta.url).href,
-         
+          whatsappName: "Cocoa Nibs",
         }
       ]
     };
@@ -83,25 +92,33 @@ export default {
   border-radius: 5px;
   margin-top: 20px;
   margin-bottom: 30px;
-  margin-left: auto;
-  margin-right: 0;
+  margin-left: 0;
+  margin-right: auto;
 }
 
-/* Imágenes de las esquinas */
+/* Imágenes de las esquinas (parte inferior) */
 .corner-img {
   position: absolute;
-  width: 150px;
+  width: 200px;
   height: auto;
 }
 
 .left {
-  top: 40px;
+  bottom: -10px;
   left: 0;
 }
 
 .right {
-  top: 40px;
+  bottom: -10px;
   right: 0;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .corner-img {
+    width: 100px;
+    bottom: 0px;
+  }
 }
 
 /* Títulos */
@@ -123,15 +140,38 @@ export default {
   background-color: #f7d26a;
   color: #3d3d3d;
   font-size: 16px;
-  margin-top: 5px;
+  margin-top: 20px;
 }
 
 /* Estilo con sombra para las tarjetas */
 .card-with-shadow {
-  border-radius: 12px; /* Bordes redondeados */
+  border-radius: 12px;
   padding: 15px;
   background-color: #fff;
+  position: relative;
 }
+
+/* Estilo de la imagen "Coming Soon" sobrepuesta */
+.coming-soon-overlay {
+  position: absolute;
+  top: 160px;
+  right: 200px;
+  width: 250px;
+  height: auto;
+  z-index: 10; /* Asegura que la imagen esté por encima de otros elementos */
+  opacity: 0.9;
+}
+
+/* Ajuste de la altura del carrusel y las imágenes */
+.coffee-carrousel {
+  height: 230px !important;
+}
+
+.coffee-carrousel-img {
+  height: 180px !important;
+}
+
+
 
 /* Responsividad */
 @media (max-width: 768px) {
@@ -146,5 +186,23 @@ export default {
   .subtitle {
     font-size: 1rem;
   }
+
+  .coming-soon-overlay {
+    width: 120px; /* Tamaño adaptado en pantallas pequeñas */
+    top: 230px;
+    right: 10px;
+  }
 }
-</style>
+
+@media (min-width: 400px) {
+  .coffee-carrousel {
+    height: 330px !important;
+  }
+
+  .coffee-carrousel-img {
+    height: 280px !important;
+  }
+
+  
+}
+</style> 

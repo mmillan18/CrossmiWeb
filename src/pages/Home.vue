@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- Navbar -->
-    <Navbar />
+    <Navbar/>
 
     <!-- Carrusel y Secciones -->
     <v-main>
@@ -16,6 +16,9 @@
 
       <!-- Sección de productos HomeProductsCacao -->
       <HomeProductsCacao />
+
+      <!-- Sección de Footer -->
+      <Footers />
     </v-main>
   </v-app>
 </template>
@@ -26,6 +29,7 @@ import Carousel from '@/components/Carousel.vue';
 import LogosSection from '@/components/LogosSection.vue'; // Importa la sección de logos
 import HomeProductsCoffee from '@/components/HomeProductsCoffee.vue'; // Importa el nuevo componente HomeProducts
 import HomeProductsCacao from '@/components/HomeProductsCacao.vue'; // Importa el nuevo componente HomeProducts
+import Footers from '@/components/Footer.vue';
 </script>
 
 <style scoped>

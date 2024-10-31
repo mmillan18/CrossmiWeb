@@ -18,12 +18,12 @@
     <!-- Carrusel de productos -->
     <v-row justify="center">
       <v-col cols="12" md="8">
-        <v-carousel  class="coffee-carrousel" hide-delimiter-background="false" :show-arrows="false" v-model="model">
+        <v-carousel class="coffee-carrousel" hide-delimiter-background="false" :show-arrows="false" v-model="model" cycle>
           <v-carousel-item v-for="(product, index) in products" :key="index">
             <v-card class="mx-auto card-with-shadow" outlined>
               <v-img :src="product.image" class="white--text coffee-carrousel-img"></v-img>
-              <v-card-title>{{ product.title }}</v-card-title>
-              <v-card-subtitle>{{ product.description }}</v-card-subtitle>
+              <v-card-title >{{ product.title }}</v-card-title> <!-- Ocultar el título -->
+              <v-card-subtitle >{{ product.description }}</v-card-subtitle> <!-- Ocultar la descripción -->
             </v-card>
           </v-carousel-item>
         </v-carousel>
@@ -33,7 +33,7 @@
     <!-- Botón Cotizar Ahora -->
     <v-row justify="center">
       <v-col cols="12" class="text-center mt-4">
-        <v-btn color="#f7d26a" @click="redirectToWhatsapp(product.title)">Cotizar Ahora</v-btn>
+        <v-btn color="#f7d26a" @click="redirectToWhatsapp(products[model].whatsappName)">Cotizar Ahora</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -50,15 +50,15 @@ export default {
       products: [
         {
           image: new URL('@/assets/coffee1-min.png', import.meta.url).href,
-
+          whatsappName: "Pink Bourbon", // Nombre del producto para WhatsApp
         },
         {
           image: new URL('@/assets/coffee2-min.png', import.meta.url).href,
-
+          whatsappName: "Geisha", // Nombre del producto para WhatsApp
         },
         {
           image: new URL('@/assets/coffee3-min.png', import.meta.url).href,
-
+          whatsappName: "Blend", // Nombre del producto para WhatsApp
         }
       ]
     };
@@ -138,11 +138,12 @@ export default {
   background-color: #fff;
 }
 
-.coffee-carrousel{
-  height: 150px!important;
+.coffee-carrousel {
+  height: 230px !important;
 }
-.coffee-carrousel-img{
-  height: 100px !important;
+
+.coffee-carrousel-img {
+  height: 180px !important;
 }
 
 /* Responsividad */
@@ -159,11 +160,12 @@ export default {
     font-size: 1rem;
   }
 }
-@media(min-width:400px){
-  .coffee-carrousel{
-    height: 330px!important;
+
+@media(min-width: 400px) {
+  .coffee-carrousel {
+    height: 330px !important;
   }
-  .coffee-carrousel-img{
+  .coffee-carrousel-img {
     height: 280px !important;
   }
 }

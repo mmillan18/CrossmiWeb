@@ -1,19 +1,9 @@
 <template>
-  <v-app-bar
-    color="primary"
-    elevate-on-scroll
-    flat
-    fixed  
-    class="navbar"
-  >
+  <v-app-bar color="primary" elevate-on-scroll flat fixed class="navbar">
     <v-row class="d-flex justify-space-between align-center">
-      <!-- Logo ajustado a la izquierda -->
+      <!-- Logo ajustado a la izquierda y responsivo -->
       <v-col cols="2" class="d-flex align-center ps-10">
-        <v-img
-          src="src/assets/logocafe-min.png"
-          class="logo"
-          alt="Logo"
-        ></v-img>
+        <v-img src="src/assets/logocafe-min.png" class="logo" alt="Logo"></v-img>
       </v-col>
 
       <!-- Botones de navegación al centro (solo en pantallas grandes) -->
@@ -23,12 +13,32 @@
             v-for="(item, i) in navbarItems"
             :key="i"
             text
-            :class="{ 'btn-active': selectedItem === item }"
-            @click="selectedItem = item"
+            :class="{ 'btn-active': selectedItem === item.title }"
+            @click="item.submenu ? toggleSubmenu(i) : navigateTo(item)"
             class="navbar-item"
           >
             {{ item.title }}
+            <v-icon v-if="item.submenu" small class="navbar-icon">mdi-chevron-down</v-icon>
           </v-btn>
+
+          <!-- Submenú para Productos en Navbar -->
+          <v-menu
+            v-if="navbarItems.find(item => item.title === 'Productos').showSubmenu"
+            v-model="navbarItems.find(item => item.title === 'Productos').showSubmenu"
+            close-on-content-click
+            nudge-width="auto"
+            offset-y
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" icon>
+                <v-icon>mdi-chevron-down</v-icon>
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item @click="navigateTo({ route: '/coffee' })" class="submenu-item">Café</v-list-item>
+              <v-list-item @click="navigateTo({ route: '/cacao' })" class="submenu-item">Cacao</v-list-item>
+            </v-list>
+          </v-menu>
         </v-row>
       </v-col>
 
@@ -37,20 +47,9 @@
         <!-- Selector de idioma -->
         <v-menu offset-y :nudge-bottom="10" :max-width="140">
           <template v-slot:activator="{ props, on }">
-            <v-btn
-              v-bind="props"
-              v-on="on"
-              class="language-button"
-              text
-            >
+            <v-btn v-bind="props" v-on="on" class="language-button" text>
               <div class="flag-text-container">
-                <v-img
-                  :src="selectedFlag"
-                  width="24"
-                  height="20"
-                  alt="Language Flag"
-                  class="flag-icon"
-                />
+                <v-img :src="selectedFlag" width="24" height="20" alt="Language Flag" class="flag-icon" />
                 <span class="language-text">{{ selectedLanguage === 'es' ? 'Español' : 'English' }}</span>
               </div>
             </v-btn>
@@ -71,22 +70,37 @@
         </v-menu>
 
         <!-- Icono de hamburguesa (solo en pantallas móviles) -->
-        <v-app-bar-nav-icon v-if="!isDesktop" @click.stop="drawer = !drawer" />
+        <v-app-bar-nav-icon v-if="!isDesktop" @click.stop="toggleDrawer" />
       </v-col>
     </v-row>
   </v-app-bar>
 
   <!-- Drawer para pantallas móviles -->
-  <v-navigation-drawer v-model="drawer" location="right" temporary class="drawer-background" width="280" >
+  <v-navigation-drawer
+    v-model="drawer"
+    location="right"
+    temporary
+    @click-outside="closeDrawerOutside"
+    class="drawer-background"
+    width="280"
+  >
     <v-list>
       <v-list-item
         v-for="(item, i) in navbarItems"
         :key="i"
-        @click="drawer = false; selectedItem = item"
+        @click="item.submenu ? toggleDrawerSubmenu() : closeDrawer(item)"
         class="menu-item-drawer"
       >
-        <v-list-item-title class="drawer-text">{{ item.title }}</v-list-item-title>
+        <v-list-item-title class="drawer-text">
+          {{ item.title }}
+          <v-icon v-if="item.submenu" small class="drawer-icon">mdi-chevron-down</v-icon>
+        </v-list-item-title>
       </v-list-item>
+      <!-- Submenú para Productos en Drawer -->
+      <v-list v-if="showDrawerSubmenu" class="submenu-list">
+        <v-list-item @click="closeDrawer({ route: '/coffee' })" class="submenu-item-drawer">Café</v-list-item>
+        <v-list-item @click="closeDrawer({ route: '/cacao' })" class="submenu-item-drawer">Cacao</v-list-item>
+      </v-list>
     </v-list>
 
     <!-- Footer fijo con contacto, íconos y copyright -->
@@ -101,7 +115,6 @@
             <v-icon class="mr-2">mdi-phone</v-icon>
             <a href="tel:+573156299567" class="link">+57 3156299567</a>
           </p>
-
           <!-- Redes sociales -->
           <div class="social-media ma-3">
             <v-btn class="miboton" icon href="https://www.instagram.com/frutos_evergreen?igsh=bDMyYmltN3c4OHlr&utm_source=qr" target="_blank" flat color="transparent">
@@ -115,7 +128,6 @@
             </v-btn>
           </div>
         </div>
-
         <v-divider></v-divider>
         <div class="copyright ma-3">
           <p>© 2024 Frutos Evergreen</p>
@@ -130,34 +142,30 @@ import { useDisplay } from 'vuetify'
 
 export default {
   setup() {
-    const { mdAndUp } = useDisplay() // Usamos useDisplay para manejar el comportamiento responsivo
-
+    const { mdAndUp } = useDisplay()
     return {
-      isDesktop: mdAndUp, // Devuelve verdadero si la pantalla es mediana o más grande (mdAndUp)
+      isDesktop: mdAndUp
     }
   },
   data() {
     return {
-      selectedItem: '', // Guardar el ítem seleccionado
+      selectedItem: '',
+      drawer: false,
+      showDrawerSubmenu: false,
       navbarItems: [
-        {
-          title: 'Inicio',
-        },
-        {
-          title: 'Sobre Nosotros',
-        },
-        {
-          title: 'Orígenes',
-        },
+        { title: 'Inicio', route: '/' },
+        { title: 'Sobre Nosotros', route: '/about' },
+        { title: 'Orígenes', route: '/origins' },
         {
           title: 'Productos',
-        },
-      ], // Opciones del navbar
-      drawer: false, // Controla la apertura del menú hamburguesa en móviles
-      selectedLanguage: 'es',  // Idioma por defecto español
+          submenu: true,
+          showSubmenu: false
+        }
+      ],
+      selectedLanguage: 'es',
       languages: [
-        { text: 'Español', value: 'es', flag: 'src/assets/flags/es-min.png' },
-        { text: 'Inglés', value: 'en', flag: 'src/assets/flags/en-min.png' }
+        { text: 'Español', value: 'es', flag: new URL('@/assets/flags/es-min.png', import.meta.url).href },
+        { text: 'Inglés', value: 'en', flag: new URL('@/assets/flags/en-min.png', import.meta.url).href }
       ]
     }
   },
@@ -172,21 +180,67 @@ export default {
       return this.languages.filter(lang => lang.value !== this.selectedLanguage)
     }
   },
+  watch: {
+    drawer(newValue) {
+      // Monitorizamos el cambio en el drawer
+      if (newValue) {
+        // Bloquea el desplazamiento cuando el drawer está abierto
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.overflowY = 'hidden';
+      } else {
+        // Restablece el desplazamiento cuando el drawer está cerrado
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.overflowY = '';
+      }
+    }
+  },
   methods: {
+    toggleDrawer() {
+      this.drawer = !this.drawer;
+    },
+    closeDrawer(item = null) {
+      this.drawer = false;
+      this.showDrawerSubmenu = false;
+      if (item && item.route) {
+        this.selectedItem = item.title;
+        this.$router.push(item.route);
+      }
+    },
+    closeDrawerOutside() {
+      this.drawer = false;
+    },
+    navigateTo(item) {
+      this.selectedItem = item.title;
+      if (item.route) this.$router.push(item.route);
+    },
+    toggleSubmenu(index) {
+      this.navbarItems[index].showSubmenu = !this.navbarItems[index].showSubmenu;
+    },
+    toggleDrawerSubmenu() {
+      this.showDrawerSubmenu = !this.showDrawerSubmenu;
+    },
     setLanguage(lang) {
-      this.selectedLanguage = lang
+      this.selectedLanguage = lang;
     }
   }
 }
 </script>
+
 
 <style scoped>
 /* Alineación del navbar y ajustes */
 .navbar {
   background-color: #faf5e2;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 10; /* Asegura que el navbar esté siempre por encima */
-  position: fixed!important;
+  z-index: 10;
+  position: fixed !important;
+}
+
+.logo {
+  max-width: 150px;
+  min-width: 100px;
 }
 
 .v-btn {
@@ -205,25 +259,25 @@ export default {
   background-color: transparent;
 }
 
-.v-row {
-  width: 100%;
-  justify-content: center;
+.navbar-icon, .drawer-icon {
+  margin-left: 5px;
+  color: #663f3f;
 }
 
-/* Ajustes del logo para que se vea bien en pantallas móviles y grandes */
-.logo {
-  max-width: 150px;
-  min-width: 100px;
-}
-
-/* Efecto hover en las opciones del navbar y drawer */
-.navbar-item:hover .v-btn,
-.menu-item-drawer:hover .drawer-text {
+.navbar-icon:hover, .drawer-icon:hover {
   color: #f77a3b !important;
 }
 
-.miboton:hover {
-  color: #f77a3b !important;
+/* Estilos para el submenu del navbar */
+.submenu-item, .submenu-item-drawer {
+  font-size: 16px;
+  color: #663f3f;
+  padding: 10px 20px;
+}
+
+.submenu-item:hover, .submenu-item-drawer:hover {
+  color: #f77a3b;
+  background-color: #faf5e2;
 }
 
 /* Drawer estilos para mobile */
@@ -233,7 +287,15 @@ export default {
   justify-content: space-between;
   background-color: #faf5e2;
   height: 100%;
-  
+}
+
+.v-navigation-drawer {
+  width: 280px;
+  height: 100vh;
+  position: fixed !important;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
 }
 
 .menu-item-drawer {
@@ -246,7 +308,6 @@ export default {
   color: #663f3f;
 }
 
-/* Footer fijo dentro del Drawer */
 .footer-drawer {
   text-align: center;
   color: #663f3f;
@@ -275,7 +336,6 @@ export default {
   text-decoration: underline;
 }
 
-/* Selector de idioma */
 .language-button {
   display: flex;
   align-items: center;
@@ -330,11 +390,5 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.v-navigation-drawer{
-  width: 200px;
-  height: 100%;
-  position: fixed!important;
 }
 </style>
