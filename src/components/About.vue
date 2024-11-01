@@ -2,19 +2,19 @@
   <v-container fluid class="about-us-section">
     <v-row justify="center" class="align-center">
       <!-- Imagen de decoración en la esquina superior derecha -->
-      <v-img :src="cornerImage" alt="Decorative Image" class="corner-image" />
+      <v-img :src="cornerImage" :alt="getTranslation('altImage')" class="corner-image" />
 
       <!-- Sección de imagen a la izquierda -->
       <v-col cols="12" md="5" class="image-section">
-        <v-img :src="aboutImage" alt="Sobre Nosotros" class="about-image" />
+        <v-img :src="aboutImage" :alt="getTranslation('altImage')" class="about-image" />
       </v-col>
 
       <!-- Sección de texto a la derecha con fondo amarillo claro -->
       <v-col cols="12" md="5" class="text-section">
         <div class="text-box">
-          <h2 class="section-title">Sobre Nosotros</h2>
+          <h2 class="section-title">{{ getTranslation('title') }}</h2>
           <p class="section-description">
-            En CROSSMI, una marca registrada de FRUTOSEVERGREEN, estamos dedicados a ofrecer al mundo el mejor café y cacao colombiano. Nuestra pasión por estos productos excepcionales nos impulsa a actuar como intermediarios comprometidos con la calidad, la sostenibilidad y la autenticidad. Trabajamos estrechamente con las comunidades productoras para asegurar que cada grano de café y cada vaina de cacao cumplan con los más altos estándares de excelencia.
+            {{ getTranslation('description') }}
           </p>
         </div>
       </v-col>
@@ -24,15 +24,36 @@
 
 <script>
 export default {
+  props: ['selectedLanguage'], // Recibe el idioma seleccionado desde el componente padre
   data() {
     return {
       aboutImage: new URL('@/assets/image5-min.JPG', import.meta.url).href,
       cornerImage: new URL('@/assets/esq2-min.png', import.meta.url).href, // Imagen decorativa
+      translations: {
+        es: {
+          title: "Sobre Nosotros",
+          altImage: "Sobre Nosotros",
+          description:
+            "En CROSSMI, una marca registrada de FRUTOSEVERGREEN, estamos dedicados a ofrecer al mundo el mejor café y cacao colombiano. Nuestra pasión por estos productos excepcionales nos impulsa a actuar como intermediarios comprometidos con la calidad, la sostenibilidad y la autenticidad. Trabajamos estrechamente con las comunidades productoras para asegurar que cada grano de café y cada vaina de cacao cumplan con los más altos estándares de excelencia."
+        },
+        en: {
+          title: "About Us",
+          altImage: "About Us",
+          description:
+            "At CROSSMI, a registered brand of FRUTOSEVERGREEN, we are dedicated to offering the world the finest Colombian coffee and cocoa. Our passion for these exceptional products drives us to act as intermediaries committed to quality, sustainability, and authenticity. We work closely with producing communities to ensure that every coffee bean and cocoa pod meets the highest standards of excellence."
+        }
+      }
     };
   },
+  methods: {
+    getTranslation(key) {
+      // Asegurarse de devolver la traducción en el idioma seleccionado o en español si no está disponible
+      const language = this.selectedLanguage in this.translations ? this.selectedLanguage : 'es';
+      return this.translations[language][key];
+    }
+  }
 };
 </script>
-
 <style scoped>
 .about-us-section {
   background-color: #fdf7e2;

@@ -21,7 +21,7 @@
             class="mr-2"
             alt="Logo"
           />
-          <h2 class="caption-text">{{ image.caption }}</h2>
+          <h2 class="caption-text">{{ getCaptionTranslation(index) }}</h2>
         </div>
       </v-container>
     </v-carousel-item>
@@ -30,16 +30,35 @@
 
 <script>
 export default {
+  props: ['selectedLanguage'], // Recibe el idioma seleccionado desde el componente padre
   data() {
     return {
-      interval: 4000,  // Tiempo de intervalo en milisegundos (3 segundos)
+      interval: 4000,  // Tiempo de intervalo en milisegundos (4 segundos)
       images: [
-        { src: new URL('@/assets/image1-min.jpeg', import.meta.url).href, caption: 'Sabores auténticos' },
-        { src: new URL('@/assets/image2-min.jpeg', import.meta.url).href, caption: 'Cultivamos con amor' },
-        { src: new URL('@/assets/image3-min.jpeg', import.meta.url).href, caption: 'Calidad en cada grano' },
+        { src: new URL('@/assets/image1-min.jpeg', import.meta.url).href, captionKey: 'authenticFlavors' },
+        { src: new URL('@/assets/image2-min.jpeg', import.meta.url).href, captionKey: 'cultivateWithLove' },
+        { src: new URL('@/assets/image3-min.jpeg', import.meta.url).href, captionKey: 'qualityInEachBean' }
       ],
+      translations: {
+        es: {
+          authenticFlavors: 'Sabores auténticos',
+          cultivateWithLove: 'Cultivamos con amor',
+          qualityInEachBean: 'Calidad en cada grano'
+        },
+        en: {
+          authenticFlavors: 'Authentic Flavors',
+          cultivateWithLove: 'We Cultivate with Love',
+          qualityInEachBean: 'Quality in Every Bean'
+        }
+      }
     };
   },
+  methods: {
+    getCaptionTranslation(index) {
+      const key = this.images[index].captionKey;
+      return this.translations[this.selectedLanguage][key];
+    }
+  }
 };
 </script>
 

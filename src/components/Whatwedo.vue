@@ -2,21 +2,21 @@
   <v-container fluid class="what-we-do-section">
     <v-row justify="center" class="align-center">
       <!-- Imagen decorativa en la esquina inferior izquierda -->
-      <v-img :src="cornerImage" alt="Decorative Image" class="corner-image" />
+      <v-img :src="cornerImage" :alt="getTranslation('altImage')" class="corner-image" />
 
       <!-- Sección de texto a la izquierda con fondo naranja claro -->
       <v-col cols="12" md="5" class="text-section">
         <div class="text-box">
-          <h2 class="section-title">Qué Hacemos</h2>
+          <h2 class="section-title">{{ getTranslation('title') }}</h2>
           <p class="section-description">
-            En CROSSMI y FRUTOSEVERGREEN, seleccionamos cuidadosamente el mejor café y cacao colombiano directamente de las regiones más prestigiosas. Implementamos rigurosos controles de calidad, facilitamos el proceso de exportación y promovemos prácticas agrícolas sostenibles. Nos esforzamos por conectar a los amantes del café y el cacao de todo el mundo con la esencia auténtica de Colombia, ofreciendo productos que reflejan nuestra dedicación a la calidad y la sostenibilidad.
+            {{ getTranslation('description') }}
           </p>
         </div>
       </v-col>
 
       <!-- Sección de imagen a la derecha -->
       <v-col cols="12" md="5" class="image-section">
-        <v-img :src="whatWeDoImage" alt="Qué Hacemos" class="what-we-do-image" />
+        <v-img :src="whatWeDoImage" :alt="getTranslation('altImage')" class="what-we-do-image" />
       </v-col>
     </v-row>
   </v-container>
@@ -24,12 +24,34 @@
 
 <script>
 export default {
+  props: ['selectedLanguage'], // Recibe el idioma seleccionado desde el componente padre
   data() {
     return {
       whatWeDoImage: new URL('@/assets/image6-min.jpeg', import.meta.url).href, // Imagen principal de "Qué Hacemos"
       cornerImage: new URL('@/assets/esq4-min.png', import.meta.url).href, // Imagen decorativa en la esquina inferior izquierda
+      translations: {
+        es: {
+          title: "Qué Hacemos",
+          altImage: "Qué Hacemos",
+          description:
+            "En CROSSMI y FRUTOSEVERGREEN, seleccionamos cuidadosamente el mejor café y cacao colombiano directamente de las regiones más prestigiosas. Implementamos rigurosos controles de calidad, facilitamos el proceso de exportación y promovemos prácticas agrícolas sostenibles. Nos esforzamos por conectar a los amantes del café y el cacao de todo el mundo con la esencia auténtica de Colombia, ofreciendo productos que reflejan nuestra dedicación a la calidad y la sostenibilidad."
+        },
+        en: {
+          title: "What We Do",
+          altImage: "What We Do",
+          description:
+            "At CROSSMI and FRUTOSEVERGREEN, we carefully select the best Colombian coffee and cocoa directly from the most prestigious regions. We implement rigorous quality controls, facilitate the export process, and promote sustainable farming practices. We strive to connect coffee and cocoa lovers worldwide with the authentic essence of Colombia, offering products that reflect our commitment to quality and sustainability."
+        }
+      }
     };
   },
+  methods: {
+    getTranslation(key) {
+      // Devuelve la traducción en el idioma seleccionado o en español por defecto
+      const language = this.selectedLanguage in this.translations ? this.selectedLanguage : 'es';
+      return this.translations[language][key];
+    }
+  }
 };
 </script>
 

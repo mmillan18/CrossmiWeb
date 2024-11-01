@@ -7,14 +7,14 @@
           <v-row>
             <!-- Sección de contacto -->
             <v-col cols="12" md="4" class="text-center">
-              <h3 class="footer-title">Contact Us</h3>
+              <h3 class="footer-title">{{ getTranslation('contactUs', 'title') }}</h3>
               <p>Comercial@frutosevergreen.com</p>
               <p>+57 3156299567</p>
             </v-col>
 
             <!-- Sección de redes sociales -->
             <v-col cols="12" md="4" class="text-center">
-              <h3 class="footer-title">Connect Us</h3>
+              <h3 class="footer-title">{{ getTranslation('connectUs', 'title') }}</h3>
               <v-btn icon href="https://www.instagram.com/frutos_evergreen?igsh=bDMyYmltN3c4OHlr&utm_source=qr" target="_blank" class="social-button">
                 <v-icon class="social-icon">mdi-instagram</v-icon>
               </v-btn>
@@ -28,13 +28,13 @@
 
             <!-- Sección del logo centrado -->
             <v-col cols="12" md="4" class="d-flex justify-center align-center">
-              <v-img :src="logoImage" alt="Frutos Evergreen" class="footer-logo" />
+              <v-img :src="logoImage" :alt="getTranslation('logo', 'alt')" class="footer-logo" />
             </v-col>
           </v-row>
           <!-- Derechos de autor -->
           <v-row class="justify-center">
             <v-col cols="12" class="text-center">
-              <p>© 2024 Crossmi. All Rights Reserved.</p>
+              <p>{{ getTranslation('copyright', 'text') }}</p>
             </v-col>
           </v-row>
         </v-col>
@@ -46,12 +46,42 @@
 <script>
 export default {
   name: 'Footers',
+  props: {
+    selectedLanguage: {
+      type: String,
+      default: 'es' // Idioma por defecto
+    }
+  },
   data() {
     return {
       logoImage: new URL('@/assets/frutoso-min.png', import.meta.url).href, // Imagen del logo
-      backgroundImage: new URL('@/assets/footer-min.jpeg', import.meta.url).href, // Imagen de fondo
+      translations: {
+        es: {
+          contactUs: { title: "Contáctanos" },
+          connectUs: { title: "Conéctanos" },
+          logo: { alt: "Frutos Evergreen" },
+          copyright: { text: "© 2024 Crossmi. Todos los derechos reservados." }
+        },
+        en: {
+          contactUs: { title: "Contact Us" },
+          connectUs: { title: "Connect Us" },
+          logo: { alt: "Frutos Evergreen" },
+          copyright: { text: "© 2024 Crossmi. All Rights Reserved." }
+        }
+      }
     };
   },
+  methods: {
+    getTranslation(key, type) {
+      // Verifica si el idioma y clave existen para evitar errores
+      const langTranslations = this.translations[this.selectedLanguage];
+      if (langTranslations && langTranslations[key] && langTranslations[key][type]) {
+        return langTranslations[key][type];
+      }
+      // Fallback en caso de que algo falte
+      return this.translations['es'][key][type] || '';
+    }
+  }
 };
 </script>
 

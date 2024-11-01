@@ -1,55 +1,69 @@
 <template>
-    <v-container class="logos-container" fluid>
-      <!-- Línea divisora amarilla -->
-      <div class="divider"></div>
-  
-      <!-- Logos -->
-      <v-row class="d-flex justify-center align-center">
-        <v-col
-          v-for="(logo, index) in logos"
-          :key="index"
-          cols="12"
-          md="4"
-         
-        >
-          <v-img
-            :src="logo.src"
-            :alt="logo.alt"
-            max-width="150"
-            max-height="150"
-            class="logo-img"
-          />
-          <h3 class="logo-caption">{{ logo.caption }}</h3>
-        </v-col>
-      </v-row>
-    </v-container>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        logos: [
-          {
-            src: new URL('@/assets/logo1-min.png', import.meta.url).href,
-            alt: 'Café de Colombia',
-            caption: 'Café de Colombia',
-          },
-          {
-            src: new URL('@/assets/logo2-min.png', import.meta.url).href,
-            alt: 'Denominación de Origen Protegida',
-            caption: 'Denominación de Origen Protegida (DOP) - Colombia',
-          },
-          {
-            src: new URL('@/assets/logo3-min.png', import.meta.url).href,
-            alt: 'Indicación Geográfica Protegida',
-            caption: 'Indicación Geográfica Protegida (IGP)',
-          },
-        ],
-      };
-    },
-  };
-  </script>
+  <v-container class="logos-container" fluid>
+    <!-- Línea divisora amarilla -->
+    <div class="divider"></div>
+
+    <!-- Logos -->
+    <v-row class="d-flex justify-center align-center">
+      <v-col
+        v-for="(logo, index) in logos"
+        :key="index"
+        cols="12"
+        md="4"
+      >
+        <v-img
+          :src="logo.src"
+          :alt="getTranslation(logo.key, 'alt')"
+          max-width="150"
+          max-height="150"
+          class="logo-img"
+        />
+        <h3 class="logo-caption">{{ getTranslation(logo.key, 'caption') }}</h3>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+export default {
+  props: ['selectedLanguage'], // Recibe el idioma seleccionado desde el componente padre
+  data() {
+    return {
+      logos: [
+        {
+          src: new URL('@/assets/logo1-min.png', import.meta.url).href,
+          key: 'coffeeColombia', // Clave de traducción
+        },
+        {
+          src: new URL('@/assets/logo2-min.png', import.meta.url).href,
+          key: 'protectedDesignation', // Clave de traducción
+        },
+        {
+          src: new URL('@/assets/logo3-min.png', import.meta.url).href,
+          key: 'geographicalIndication', // Clave de traducción
+        },
+      ],
+      translations: {
+        es: {
+          coffeeColombia: { alt: 'Café de Colombia', caption: 'Café de Colombia' },
+          protectedDesignation: { alt: 'Denominación de Origen Protegida', caption: 'Denominación de Origen Protegida (DOP) - Colombia' },
+          geographicalIndication: { alt: 'Indicación Geográfica Protegida', caption: 'Indicación Geográfica Protegida (IGP)' }
+        },
+        en: {
+          coffeeColombia: { alt: 'Coffee of Colombia', caption: 'Coffee of Colombia' },
+          protectedDesignation: { alt: 'Protected Designation of Origin', caption: 'Protected Designation of Origin (PDO) - Colombia' },
+          geographicalIndication: { alt: 'Protected Geographical Indication', caption: 'Protected Geographical Indication (PGI)' }
+        }
+      }
+    };
+  },
+  methods: {
+    getTranslation(key, type) {
+      return this.translations[this.selectedLanguage][key][type];
+    }
+  }
+};
+</script>
   
   <style scoped>
   /* Línea divisora amarilla debajo del carrusel */

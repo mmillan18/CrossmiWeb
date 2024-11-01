@@ -2,30 +2,40 @@
 <template>
     <v-app>
       <!-- Navbar -->
-      <Navbar />
+      <Navbar @languageChanged="setLanguage" />
   
       <!-- Contenido de Origenes -->
       <v-main>
-        <Origins />
+        <Origins :selectedLanguage="selectedLanguage" />
       </v-main>
   
       <!-- Footer -->
-      <Footers />
+      <Footers :selectedLanguage="selectedLanguage"/>
     </v-app>
   </template>
   
-  <script>
+  <script setup>
+  import { ref, onMounted } from 'vue';
   import Navbar from '@/components/Navbar.vue';
   import Origins from '@/components/Origins.vue';
   import Footers from '@/components/Footer.vue';
   
-  export default {
-    components: {
-      Navbar,
-      Origins,
-      Footers,
-    },
-  };
+  // Estado reactivo para el idioma seleccionado
+const selectedLanguage = ref('es'); // Valor predeterminado
+
+// Función para actualizar el idioma y guardarlo en localStorage
+function setLanguage(lang) {
+  selectedLanguage.value = lang;
+  localStorage.setItem('selectedLanguage', lang); // Guardar idioma en localStorage
+}
+
+// Al montar el componente, revisar si hay un idioma guardado en localStorage
+onMounted(() => {
+  const savedLanguage = localStorage.getItem('selectedLanguage');
+  if (savedLanguage) {
+    selectedLanguage.value = savedLanguage; // Usar el idioma guardado si existe
+  }
+});
   </script>
   
   <style scoped>

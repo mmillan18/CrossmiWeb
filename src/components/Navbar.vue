@@ -13,30 +13,30 @@
             v-for="(item, i) in navbarItems"
             :key="i"
             text
-            :class="{ 'btn-active': selectedItem === item.title }"
+            :class="{ 'btn-active': selectedItem === item.key }"
             @click="item.submenu ? toggleSubmenu(i) : navigateTo(item)"
             class="navbar-item"
           >
-            {{ item.title }}
+            {{ getTranslation(item.key) }}
             <v-icon v-if="item.submenu" small class="navbar-icon">mdi-chevron-down</v-icon>
           </v-btn>
 
-          <!-- Submenú para Productos en Navbar -->
+          <!-- Submenú para Productos en Navbar, con ajuste para aparecer justo debajo -->
           <v-menu
-            v-if="navbarItems.find(item => item.title === 'Productos').showSubmenu"
-            v-model="navbarItems.find(item => item.title === 'Productos').showSubmenu"
+            v-if="navbarItems.find(item => item.key === 'productos').showSubmenu"
+            v-model="navbarItems.find(item => item.key === 'productos').showSubmenu"
             close-on-content-click
             nudge-width="auto"
             offset-y
           >
             <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" icon>
+              <v-btn v-bind="props" icon class="invisible-icon"> <!-- Botón invisible para mantener el menú en su lugar -->
                 <v-icon>mdi-chevron-down</v-icon>
               </v-btn>
             </template>
             <v-list>
-              <v-list-item @click="navigateTo({ route: '/coffee' })" class="submenu-item">Café</v-list-item>
-              <v-list-item @click="navigateTo({ route: '/cacao' })" class="submenu-item">Cacao</v-list-item>
+              <v-list-item @click="navigateTo({ route: '/coffee' })" class="submenu-item">{{ getTranslation('cafe') }}</v-list-item>
+              <v-list-item @click="navigateTo({ route: '/cacao' })" class="submenu-item">{{ getTranslation('cacao') }}</v-list-item>
             </v-list>
           </v-menu>
         </v-row>
@@ -92,14 +92,14 @@
         class="menu-item-drawer"
       >
         <v-list-item-title class="drawer-text">
-          {{ item.title }}
+          {{ getTranslation(item.key) }}
           <v-icon v-if="item.submenu" small class="drawer-icon">mdi-chevron-down</v-icon>
         </v-list-item-title>
       </v-list-item>
       <!-- Submenú para Productos en Drawer -->
       <v-list v-if="showDrawerSubmenu" class="submenu-list">
-        <v-list-item @click="closeDrawer({ route: '/coffee' })" class="submenu-item-drawer">Café</v-list-item>
-        <v-list-item @click="closeDrawer({ route: '/cacao' })" class="submenu-item-drawer">Cacao</v-list-item>
+        <v-list-item @click="closeDrawer({ route: '/coffee' })" class="submenu-item-drawer">{{ getTranslation('cafe') }}</v-list-item>
+        <v-list-item @click="closeDrawer({ route: '/cacao' })" class="submenu-item-drawer">{{ getTranslation('cacao') }}</v-list-item>
       </v-list>
     </v-list>
 
@@ -138,14 +138,14 @@
 </template>
 
 <script>
-import { useDisplay } from 'vuetify'
+import { useDisplay } from 'vuetify';
 
 export default {
   setup() {
-    const { mdAndUp } = useDisplay()
+    const { mdAndUp } = useDisplay();
     return {
       isDesktop: mdAndUp
-    }
+    };
   },
   data() {
     return {
@@ -153,50 +153,54 @@ export default {
       drawer: false,
       showDrawerSubmenu: false,
       navbarItems: [
-        { title: 'Inicio', route: '/' },
-        { title: 'Sobre Nosotros', route: '/about' },
-        { title: 'Orígenes', route: '/origins' },
-        {
-          title: 'Productos',
-          submenu: true,
-          showSubmenu: false
-        }
+        { key: 'inicio', route: '/' },
+        { key: 'sobreNosotros', route: '/about' },
+        { key: 'origenes', route: '/origins' },
+        { key: 'productos', submenu: true, showSubmenu: false }
       ],
-      selectedLanguage: 'es',
+      selectedLanguage: 'es', // Idioma predeterminado
       languages: [
         { text: 'Español', value: 'es', flag: new URL('@/assets/flags/es-min.png', import.meta.url).href },
         { text: 'Inglés', value: 'en', flag: new URL('@/assets/flags/en-min.png', import.meta.url).href }
-      ]
-    }
+      ],
+      translations: {
+        es: {
+          inicio: 'Inicio',
+          sobreNosotros: 'Sobre Nosotros',
+          origenes: 'Orígenes',
+          productos: 'Productos',
+          cafe: 'Café',
+          cacao: 'Cacao'
+        },
+        en: {
+          inicio: 'Home',
+          sobreNosotros: 'About Us',
+          origenes: 'Origins',
+          productos: 'Products',
+          cafe: 'Coffee',
+          cacao: 'Cocoa'
+        }
+      }
+    };
   },
   computed: {
     selectedFlag() {
-      const selectedLang = this.languages.find(
-        (lang) => lang.value === this.selectedLanguage
-      )
-      return selectedLang ? selectedLang.flag : ''
+      const selectedLang = this.languages.find(lang => lang.value === this.selectedLanguage);
+      return selectedLang ? selectedLang.flag : '';
     },
     availableLanguages() {
-      return this.languages.filter(lang => lang.value !== this.selectedLanguage)
-    }
-  },
-  watch: {
-    drawer(newValue) {
-      // Monitorizamos el cambio en el drawer
-      if (newValue) {
-        // Bloquea el desplazamiento cuando el drawer está abierto
-        document.body.style.position = 'fixed';
-        document.body.style.width = '100%';
-        document.body.style.overflowY = 'hidden';
-      } else {
-        // Restablece el desplazamiento cuando el drawer está cerrado
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.overflowY = '';
-      }
+      return this.languages.filter(lang => lang.value !== this.selectedLanguage);
     }
   },
   methods: {
+    setLanguage(lang) {
+      this.selectedLanguage = lang;
+      localStorage.setItem('selectedLanguage', lang); // Guarda el idioma en localStorage
+      this.$emit('languageChanged', lang); // Emite el evento hacia el componente principal
+    },
+    getTranslation(key) {
+      return this.translations[this.selectedLanguage][key];
+    },
     toggleDrawer() {
       this.drawer = !this.drawer;
     },
@@ -204,7 +208,7 @@ export default {
       this.drawer = false;
       this.showDrawerSubmenu = false;
       if (item && item.route) {
-        this.selectedItem = item.title;
+        this.selectedItem = item.key;
         this.$router.push(item.route);
       }
     },
@@ -212,7 +216,7 @@ export default {
       this.drawer = false;
     },
     navigateTo(item) {
-      this.selectedItem = item.title;
+      this.selectedItem = item.key;
       if (item.route) this.$router.push(item.route);
     },
     toggleSubmenu(index) {
@@ -220,13 +224,20 @@ export default {
     },
     toggleDrawerSubmenu() {
       this.showDrawerSubmenu = !this.showDrawerSubmenu;
-    },
-    setLanguage(lang) {
-      this.selectedLanguage = lang;
+    }
+  },
+  mounted() {
+    // Al montarse, verifica si hay un idioma guardado en localStorage
+    const savedLanguage = localStorage.getItem('selectedLanguage');
+    if (savedLanguage) {
+      this.selectedLanguage = savedLanguage;
     }
   }
-}
+};
 </script>
+
+
+
 
 
 <style scoped>
@@ -391,4 +402,4 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-</style>
+</style> 
