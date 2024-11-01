@@ -18,9 +18,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa  # Corrige saltos de línea potenciales
+          echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa  # Corrige saltos de línea en Windows
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 157.173.209.163 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 157.173.209.163 >> ~/.ssh/known_hosts  # Asegúrate de usar la IP correcta
 
       - name: Deploy to Hostinger
         run: |
