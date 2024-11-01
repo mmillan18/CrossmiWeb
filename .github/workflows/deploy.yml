@@ -16,6 +16,7 @@ jobs:
     - name: Setup SSH
       env:
         SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+      shell: bash
       run: |
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
