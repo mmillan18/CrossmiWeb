@@ -80,3 +80,25 @@ This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library wi
 
 Copyright (c) 2016-present Vuetify, LLC
 "# CrossmiWeb" 
+
+# Crossmi - Frutos Evergreen Website 🌱
+# Description
+Crossmi is a premium website showcasing the finest Colombian coffee and cacao products, emphasizing quality, sustainability, and authentic flavors. This project highlights the dedication of Frutos Evergreen to bringing the best of Tolima’s agricultural richness to the world. The site provides information about the products, their origins, and the brand’s mission to deliver excellence.
+
+# Features
+Home Page: A visually stunning landing page introducing the brand’s core philosophy: "Cultivamos con amor" (We cultivate with love).
+Product Catalog: Detailed information on premium products, such as:
+Pink Bourbon Coffee:
+SCA Score: 86 points
+Origin: Planadas, Gaitania
+Altitude: 1500 - 1800 M.A.S.L
+Flavor Profile: Red fruits, blackberries, cherry, caramel
+Cocoa Liquor & Powder (Coming Soon): Highlighting its rich aroma, flavor, and sustainable production methods.
+About Us: Insights into the brand’s commitment to quality, sustainability, and its collaboration with local producers.
+Origins: Showcasing Tolima’s coffee-growing regions and their unique characteristics.
+Contact Section: A user-friendly section to get in touch with the team via email, WhatsApp, and social media.
+
+# Technologies Used
+Frontend Framework: Vue.js 3
+UI Library: Vuetify 3
+Routing: Vue Router
