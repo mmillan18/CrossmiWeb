@@ -3,7 +3,9 @@
     <v-row class="d-flex justify-space-between align-center">
       <!-- Logo ajustado a la izquierda y responsivo -->
       <v-col cols="2" class="d-flex align-center ps-10">
-        <v-img src="src/assets/logocafe-min.png" class="logo" alt="Logo"></v-img>
+        <v-img :src="logoImage" class="logo" alt="Logo"></v-img>
+
+
       </v-col>
 
       <!-- Botones de navegación al centro (solo en pantallas grandes) -->
@@ -149,6 +151,7 @@ export default {
   },
   data() {
     return {
+      logoImage: new URL('@/assets/logocafe-min.png', import.meta.url).href,
       selectedItem: '',
       drawer: false,
       showDrawerSubmenu: false,
